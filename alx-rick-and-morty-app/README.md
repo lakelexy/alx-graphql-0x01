@@ -1,40 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# ALX Rick and Morty App
 
-## Getting Started
+This project is part of the ALX GraphQL module. It demonstrates how to set up a basic Next.js app with Apollo Client to interact with the Rick and Morty GraphQL API.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js and npm installed
+- Basic understanding of GraphQL and Next.js
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/alx-graphql-0x01.git
+   cd alx-graphql-0x01/alx-rick-and-morty-app
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+## Project Structure
+
+```
+.
+├── graphql
+│   ├── apolloClient.ts   # Apollo Client configuration
+│   └── queries.ts        # GraphQL queries
+├── pages
+│   └── _app.tsx          # Custom App component with ApolloProvider
+├── public                # Static assets
+├── styles                # Global and component-specific styles
+└── README.md             # Project documentation
+```
+
+## Configuration
+
+### Apollo Client Setup
+
+The Apollo Client is configured in `graphql/apolloClient.ts` to interact with the Rick and Morty GraphQL API:
+
+```typescript
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: "https://rickandmortyapi.com/graphql",
+  }),
+  cache: new InMemoryCache(),
+});
+
+export default client;
+```
+
+### GraphQL Query
+
+The `GET_EPISODES` query is defined in `graphql/queries.ts` to fetch episodes data:
+
+```typescript
+import { gql } from "@apollo/client";
+
+export const GET_EPISODES = gql`
+  query getEpisodes($page: Int, $filter: FilterEpisode) {
+    episodes(page: $page, filter: $filter) {
+      info {
+        pages
+        next
+        prev
+        count
+      }
+      results {
+        id
+        name
+        air_date
+        episode
+      }
+    }
+  }
+`;
+```
+
+### Custom App Component
+
+The `_app.tsx` file sets up the ApolloProvider to make the client accessible across the app:
+
+```typescript
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { ApolloProvider } from "@apollo/client";
+import client from "@/graphql/apolloClient";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
+  );
+}
+```
+
+## Running the Project
+
+To start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser and navigate to:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Expected Output
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+After starting the development server and navigating to `http://localhost:3000`, the following should be achieved:
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- A functional Next.js application with Apollo Client configured.
+- Queries to the Rick and Morty GraphQL API can be successfully executed.
+- Display of Rick and Morty episodes when integrated with additional components.
 
-## Learn More
+## Repository
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+GitHub Repository: [alx-graphql-0x01](https://github.com/lakelexy/alx-graphql-0x01)
